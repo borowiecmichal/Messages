@@ -27,8 +27,23 @@ class Users:
                 print('saving wasn\'t done')
                 return False
 
-    def load_user_by_username(self):
-        pass
+    @staticmethod
+    def load_user_by_username(username):
+        sql = f"""
+        SELECT * FROM users WHERE username='{username}';
+        """
+        try:
+            conn = connect()
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            usr = cursor.fetchone()
+            conn.close()
+            return usr
+        except Exception as e:
+            print('searching failed')
+            conn.close()
+            return
+
 
     def load_user_by_id(self):
         pass
@@ -41,5 +56,4 @@ class Users:
 
 
 if __name__ == '__main__':
-    a = Users('ted', 'poiuytr')
-    print(a.save_to_db())
+    print(Users.load_user_by_username('xd'))
