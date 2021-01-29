@@ -1,4 +1,5 @@
 from connection import connect
+import hashlib
 
 class Users:
     def __init__(self, username='', password=''):
