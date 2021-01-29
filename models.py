@@ -178,10 +178,16 @@ class Messages:
                 return False
 
     @staticmethod
-    def load_all_messages():
+    def load_all_messages(**kwargs):
         sql = '''
         SELECT * FROM messages
         '''
+        sql_temp = []
+        for key, value in kwargs.items():
+            sql_temp.append(f' {key}={value}')
+
+        if sql_temp:
+            sql += f"Where {' AND '.join(sql_temp)}"
         try:
             conn = connect()
             cursor = conn.cursor()

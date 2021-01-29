@@ -11,8 +11,11 @@ while True:
         username = input('Username: ')
         password = input('Password: ')
         user = Users.load_user_by_username(username)
+        #id, text, from_id, to_id, date
         if password == user._password:
-            Messages.load_all_messages()
+            a = Messages.load_all_messages(to_id=user._id)
+            for item in a:
+                print(item)
             ###################
 
     elif option == 2:
