@@ -6,7 +6,7 @@ def create_table_users():
     sql = '''
     CREATE TABLE users(
         id serial,
-        username varchar(255),
+        username varchar(255) unique ,
         password varchar(80),
         PRIMARY KEY(id)
     );

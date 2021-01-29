@@ -29,8 +29,18 @@ class Users:
 
         else:
             sql = f'''
-            UPDATE users SET ('{self.username}', '{self._password}') WHERE id={self._id}
+            UPDATE users SET username = '{self.username}', password = '{self._password}' WHERE id={self._id}
             '''
+            try:
+                conn = connect()
+                cursor = conn.cursor()
+                cursor.execute(sql)
+                conn.close()
+                return True
+            except Exception as e:
+                conn.close()
+                print('saving wasn\'t done')
+                return False
 
     @staticmethod
     def load_user_by_username(username):
@@ -150,6 +160,22 @@ class Messages:
                 print('saving failed')
                 conn.close()
                 return False
+        else:
+            sql = f'''
+            UPDATE messages 
+            SET from_id={self.from_id}, to_id={self.to_id}, creation_date='{self.creation_date}', msg='{self.msg}'
+            WHERE id = {self.id}
+            '''
+            try:
+                conn = connect()
+                cursor = conn.cursor()
+                cursor.execute(sql)
+                conn.close()
+                return True
+            except Exception as e:
+                conn.close()
+                print('saving wasn\'t done')
+                return False
 
     @staticmethod
     def load_all_messages():
@@ -176,11 +202,12 @@ class Messages:
         except:
             conn.close()
             print('loading failed')
+
     def __str__(self):
         return f'from {self.from_id} to {self.to_id}: {self.msg}, {self.creation_date}'
 
 
 if __name__ == '__main__':
-    a = Messages.load_all_messages()
-    for item in a:
-        print(item)
+    a=Users.load_user_by_id(2)
+    a.delete()
+    print(a)
