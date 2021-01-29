@@ -2,7 +2,7 @@ from connection import connect
 
 
 class Users:
-    def __init__(self, username, password):
+    def __init__(self, username='', password=''):
         self._id = None
         self.username = username
         self._password = password
@@ -58,10 +58,15 @@ class Users:
             conn = connect()
             cursor = conn.cursor()
             cursor.execute(sql)
-            result = cursor.fetchone()
+            data = cursor.fetchone()
             conn.close()
-            return result
-        except:
+            if data:
+                loaded_user = Users()
+                loaded_user._id = data[0]
+                loaded_user.username = data[1]
+                loaded_user._password = data[2]
+                return loaded_user
+        except Exception as e:
             print('searcihng failed')
             conn.close()
             return None
@@ -83,11 +88,26 @@ class Users:
             print('searcihng failed')
             return None
 
-    def delete(self):
-        pass
 
+    def delete(self):
+        sql=f'''
+        DELETE FROM users WHERE id={self._id};
+        '''
+        try:
+            conn = connect()
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            self._id = None
+            conn.close()
+            return True
+        except:
+            print('delating failed')
+            conn.close()
+            return False
+
+    def __str__(self):
+        return f'{self._id, self.username}'
 
 if __name__ == '__main__':
-    users_list=Users.load_all_users()
-    for user in users_list:
-        print(user)
+    a= Users.load_user_by_id(5)
+    print(a)
