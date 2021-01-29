@@ -7,13 +7,23 @@ class Users:
         self.username = username
         self._password = password
 
-    def set_password(self, password):
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, password):
+        password = password
         self._password = password
 
     def save_to_db(self):
         if self._id == None:
             sql = f'''
-            INSERT INTO users(username, password) VALUES ('{self.username}', '{self._password}') RETURNING id
+            INSERT INTO users(username, password) VALUES ('{self.username}', '{self.password}') RETURNING id
             '''
             try:
                 conn = connect()
@@ -29,7 +39,7 @@ class Users:
 
         else:
             sql = f'''
-            UPDATE users SET username = '{self.username}', password = '{self._password}' WHERE id={self._id}
+            UPDATE users SET username = '{self.username}', password = '{self.password}' WHERE id={self._id}
             '''
             try:
                 conn = connect()
@@ -214,4 +224,6 @@ class Messages:
 
 
 if __name__ == '__main__':
-    print(Messages.load_all_messages())
+    a = Users.load_user_by_username('adam1')
+    a.password = 'abcd'
+    a.save_to_db()
