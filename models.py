@@ -27,6 +27,11 @@ class Users:
                 print('saving wasn\'t done')
                 return False
 
+        else:
+            sql = f'''
+            UPDATE users SET ('{self.username}', '{self._password}') WHERE id={self._id}
+            '''
+
     @staticmethod
     def load_user_by_username(username):
         sql = f"""
@@ -44,16 +49,45 @@ class Users:
             conn.close()
             return
 
+    @staticmethod
+    def load_user_by_id(id):
+        sql = f'''
+        SELECT * FROM users WHERE id={id}
+        '''
+        try:
+            conn = connect()
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            result = cursor.fetchone()
+            conn.close()
+            return result
+        except:
+            print('searcihng failed')
+            conn.close()
+            return None
 
-    def load_user_by_id(self):
-        pass
-
-    def load_all_users(self):
-        pass
+    @staticmethod
+    def load_all_users():
+        sql = f'''
+        SELECT * FROM users
+        '''
+        try:
+            conn = connect()
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            conn.close()
+            return result
+        except:
+            conn.close()
+            print('searcihng failed')
+            return None
 
     def delete(self):
         pass
 
 
 if __name__ == '__main__':
-    print(Users.load_user_by_username('xd'))
+    users_list=Users.load_all_users()
+    for user in users_list:
+        print(user)
