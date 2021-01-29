@@ -1,10 +1,24 @@
 from models import Users, Messages
 
+
+def login():
+    username = input('Username: ')
+    password = input('Password: ')
+    user = Users.load_user_by_username(username)
+    try:
+        if user and password == user.password:
+            return user
+        else:
+            raise Exception
+    except Exception:
+        print('Wrong username or password')
+
+
 while True:
     try:
         option = int(input(
             'What you want to do?\n1: Create User\n2: Edit password\n3: Delete user\n4: See all users\nYour choice: '))
-    except:
+    except ValueError:
         print('Try again')
         continue
     if option == 1:
@@ -14,21 +28,15 @@ while True:
         new_user.save_to_db()
 
     elif option == 2:
-        username = input('Username: ')
-        password = input('Old password: ')
-        new_pass = input('New password: ')
-
-        user = Users.load_user_by_username(username)
-        if password == user.password:
+        user = login()
+        if user:
+            new_pass = input('New password: ')
             user.password = new_pass
             user.save_to_db()
 
     elif option == 3:
-        username = input('Username: ')
-        password = input('Old password: ')
-
-        user = Users.load_user_by_username(username)
-        if password == user.password:
+        user = login()
+        if user:
             user.delete()
 
     elif option == 4:

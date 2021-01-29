@@ -69,10 +69,13 @@ class Users:
                 loaded_user.username = data[1]
                 loaded_user._password = data[2]
                 return loaded_user
+            else:
+                return
         except Exception as e:
             print('searching failed')
             conn.close()
             return
+
 
     @staticmethod
     def load_user_by_id(id):
@@ -198,6 +201,7 @@ class Messages:
 
         if sql_temp:
             sql += f"Where {' AND '.join(sql_temp)}"
+
         try:
             conn = connect()
             cursor = conn.cursor()
@@ -224,6 +228,5 @@ class Messages:
 
 
 if __name__ == '__main__':
-    a = Users.load_user_by_username('adam1')
-    a.password = 'abcd'
-    a.save_to_db()
+    a = Users.load_user_by_username('michal1')
+

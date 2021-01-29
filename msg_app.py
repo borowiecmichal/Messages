@@ -1,5 +1,18 @@
 from models import Users, Messages
 
+def login():
+    username = input('Username: ')
+    password = input('Password: ')
+    user = Users.load_user_by_username(username)
+    try:
+        if user and password == user.password:
+            return user
+        else:
+            raise Exception
+    except Exception:
+        print('Wrong username or password')
+
+
 while True:
     try:
         option = int(input('What you want to do?\n1: See your messages\n2: Send message\nYour choice: '))
@@ -8,23 +21,20 @@ while True:
         continue
 
     if option == 1:
-        username = input('Username: ')
-        password = input('Password: ')
-        user = Users.load_user_by_username(username)
-        #id, text, from_id, to_id, date
-        if password == user._password:
-            a = Messages.load_all_messages(to_id=user._id)
+        user = login()
+        if user:
+            a = Messages.load_all_messages(to_id = user.id)
             for item in a:
-                print(item)
-            ###################
+                user_from = Users.load_user_by_id(item.from_id)
+                print(f'\nMessage from {user_from.username}:\n{item.msg}\nSent {item.creation_date}\n')
 
     elif option == 2:
         username = input('Username: ')
         password = input('Password: ')
         user = Users.load_user_by_username(username)
-        if password == user._password:
-            adresat = input('To whom you want to send your message')
-            adresat = Users.load_user_by_username(adresat)
+        if password == user.password:
+            receiver = input('To whom you want to send your message')
+            receiver = Users.load_user_by_username(receiver)
             msg = input('Write your message: ')
-            new_msg = Messages(user._id, adresat._id, msg)
+            new_msg = Messages(user.id, receiver.id, msg)
             new_msg.save_to_db()
