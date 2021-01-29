@@ -120,7 +120,67 @@ class Users:
         return f'{self._id, self.username}'
 
 
+class Messages:
+    def __init__(self, from_id='', to_id='', msg=''):
+        self._id = None
+        self.from_id = from_id
+        self.to_id = to_id
+        self.msg = msg
+        self.creation_date = None
+
+    @property
+    def id(self):
+        return self._id
+
+    def save_to_db(self):
+        if self._id == None:
+            sql = f'''
+            INSERT INTO messages(from_id, to_id, msg) VALUES ({self.from_id},{self.to_id},'{self.msg}') RETURNING id, creation_date
+            '''
+            try:
+                conn = connect()
+                cursor = conn.cursor()
+                cursor.execute(sql)
+                data = cursor.fetchone()
+                self._id = data[0]
+                self.creation_date = data[1]
+                conn.close()
+                return True
+            except Exception as e:
+                print('saving failed')
+                conn.close()
+                return False
+
+    @staticmethod
+    def load_all_messages():
+        sql = '''
+        SELECT * FROM messages
+        '''
+        try:
+            conn = connect()
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            data = cursor.fetchall()
+            msg_list = []
+            for msg in data:
+                message = Messages()
+                message._id = msg[0]
+                message.from_id = msg[1]
+                message.to_id = msg[2]
+                message.creation_date = msg[3]
+                message.msg = msg[4]
+                msg_list.append(message)
+            conn.close()
+            return msg_list
+
+        except:
+            conn.close()
+            print('loading failed')
+    def __str__(self):
+        return f'from {self.from_id} to {self.to_id}: {self.msg}, {self.creation_date}'
+
+
 if __name__ == '__main__':
-    a = Users.load_all_users()
+    a = Messages.load_all_messages()
     for item in a:
         print(item)

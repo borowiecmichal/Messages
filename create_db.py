@@ -24,13 +24,13 @@ def create_table_messages():
     sql = '''
     CREATE TABLE messages(
         id serial,
-        from_id int,
-        to_id int,
-        creation_date timestamp,
+        from_id integer,
+        to_id integer,
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         msg varchar(255),
         PRIMARY KEY(id),
-        FOREIGN KEY(from_id) REFERENCES users(id),
-        FOREIGN KEY(to_id) REFERENCES users(id)
+        FOREIGN KEY(from_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY(to_id) REFERENCES users(id) ON DELETE CASCADE
     );
     '''
     try:
@@ -40,6 +40,8 @@ def create_table_messages():
     except psycopg2.errors.DuplicateTable:
         print('Table messages already exists')
     conn.close()
+
+
 
 
 if __name__ == '__main__':
