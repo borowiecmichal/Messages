@@ -192,7 +192,7 @@ class Messages:
     @staticmethod
     def load_all_messages(**kwargs):
         sql = '''
-        SELECT * FROM messages
+        SELECT * FROM messages;
         '''
         sql_temp = []
         for key, value in kwargs.items():
