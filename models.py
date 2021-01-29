@@ -1,6 +1,5 @@
 from connection import connect
 
-
 class Users:
     def __init__(self, username='', password=''):
         self._id = None
