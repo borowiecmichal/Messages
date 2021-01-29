@@ -41,9 +41,14 @@ class Users:
             conn = connect()
             cursor = conn.cursor()
             cursor.execute(sql)
-            usr = cursor.fetchone()
+            data = cursor.fetchone()
             conn.close()
-            return usr
+            if data:
+                loaded_user = Users()
+                loaded_user._id = data[0]
+                loaded_user.username = data[1]
+                loaded_user._password = data[2]
+                return loaded_user
         except Exception as e:
             print('searching failed')
             conn.close()
@@ -82,15 +87,21 @@ class Users:
             cursor.execute(sql)
             result = cursor.fetchall()
             conn.close()
-            return result
-        except:
+            users = []
+            for user in result:
+                loaded_user = Users()
+                loaded_user._id = user[0]
+                loaded_user.username = user[1]
+                loaded_user._password = user[2]
+                users.append(loaded_user)
+            return users
+        except Exception as e:
             conn.close()
             print('searcihng failed')
             return None
 
-
     def delete(self):
-        sql=f'''
+        sql = f'''
         DELETE FROM users WHERE id={self._id};
         '''
         try:
@@ -108,6 +119,8 @@ class Users:
     def __str__(self):
         return f'{self._id, self.username}'
 
+
 if __name__ == '__main__':
-    a= Users.load_user_by_id(5)
-    print(a)
+    a = Users.load_all_users()
+    for item in a:
+        print(item)
