@@ -208,6 +208,4 @@ class Messages:
 
 
 if __name__ == '__main__':
-    a=Users.load_user_by_id(2)
-    a.delete()
-    print(a)
+    print(Messages.load_all_messages())
