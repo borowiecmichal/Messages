@@ -1,29 +1,33 @@
 from connection import connect
-import hashlib
+from hashing_password import *
 
 class Users:
-    def __init__(self, username='', password=''):
+    def __init__(self, username='', password='', salt=''):
         self._id = None
         self.username = username
-        self._password = password
+        self._hashed_password = hash_password(password,salt)
 
     @property
     def id(self):
         return self._id
 
-    @property
-    def password(self):
-        return self._password
 
-    @password.setter
-    def password(self, password):
-        password = password
-        self._password = password
+
+    @property
+    def hashed_password(self):
+        return self._hashed_password
+
+    def set_password(self, password, salt=''):
+        self._hashed_password = hash_password(password, salt)
+
+    @hashed_password.setter
+    def hashed_password(self, password):
+        self._hashed_password = password
 
     def save_to_db(self):
         if self._id == None:
             sql = f'''
-            INSERT INTO users(username, password) VALUES ('{self.username}', '{self.password}') RETURNING id
+            INSERT INTO users(username, password) VALUES ('{self.username}', '{self.hashed_password}') RETURNING id
             '''
             try:
                 conn = connect()
@@ -39,7 +43,7 @@ class Users:
 
         else:
             sql = f'''
-            UPDATE users SET username = '{self.username}', password = '{self.password}' WHERE id={self._id}
+            UPDATE users SET username = '{self.username}', password = '{self.hashed_password}' WHERE id={self._id}
             '''
             try:
                 conn = connect()
@@ -67,7 +71,7 @@ class Users:
                 loaded_user = Users()
                 loaded_user._id = data[0]
                 loaded_user.username = data[1]
-                loaded_user._password = data[2]
+                loaded_user._hashed_password = data[2]
                 return loaded_user
             else:
                 return
@@ -92,7 +96,7 @@ class Users:
                 loaded_user = Users()
                 loaded_user._id = data[0]
                 loaded_user.username = data[1]
-                loaded_user._password = data[2]
+                loaded_user._hashed_password = data[2]
                 return loaded_user
         except Exception as e:
             print('searcihng failed')
@@ -115,7 +119,7 @@ class Users:
                 loaded_user = Users()
                 loaded_user._id = user[0]
                 loaded_user.username = user[1]
-                loaded_user._password = user[2]
+                loaded_user._hashed_password = user[2]
                 users.append(loaded_user)
             return users
         except Exception as e:
@@ -228,5 +232,6 @@ class Messages:
 
 
 if __name__ == '__main__':
-    a = Users.load_user_by_username('michal1')
+    a = Users('ziomal', 'xsss')
+    a.save_to_db()
 
