@@ -5,16 +5,15 @@ def login():
     username = input('Username: ')
     password = input('Password: ')
     user = Users.load_user_by_username(username)
-    try:
-        if user and hashing_password.check_password(password, user.hashed_password):
-            return user
-        else:
-            raise Exception
-    except Exception:
+
+    if user and hashing_password.check_password(password, user.hashed_password):
+        return user
+    else:
         print('Wrong username or password')
 
-#-Lr(O7M)ePo0!S4ac08c14916cc7d5af7dd48fb0c040e2b4771530317d6ef79557de037c60cd83
-#YlOuANkay>nX}\Q177030fee1d85f15217290f8236d1154c6979936c5c908c823995f7289ebfa3c
+
+
+
 while True:
     try:
         option = int(input(

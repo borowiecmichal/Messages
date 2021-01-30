@@ -47,3 +47,4 @@ def create_table_messages():
 if __name__ == '__main__':
     create_table_users()
     create_table_messages()
+

@@ -5,13 +5,10 @@ def login():
     username = input('Username: ')
     password = input('Password: ')
     user = Users.load_user_by_username(username)
-    try:
-        if user and hashing_password.check_password(password, user.hashed_password):
-            return user
-        else:
-            raise Exception
 
-    except Exception:
+    if user and hashing_password.check_password(password, user.hashed_password):
+        return user
+    else:
         print('Wrong username or password')
 
 
@@ -35,7 +32,10 @@ while True:
         user = login()
         if user:
             receiver = input('To whom you want to send your message')
-            receiver = Users.load_user_by_username(receiver)
+            receiver_user = Users.load_user_by_username(receiver)
             msg = input('Write your message: ')
-            new_msg = Messages(user.id, receiver.id, msg)
-            new_msg.save_to_db()
+            try:
+                new_msg = Messages(user.id, receiver_user.id, msg)
+                new_msg.save_to_db()
+            except AttributeError:
+                print(f'No {receiver} user')

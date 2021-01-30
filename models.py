@@ -1,11 +1,12 @@
 from connection import connect
 from hashing_password import *
+import psycopg2
 
 class Users:
     def __init__(self, username='', password='', salt=''):
         self._id = None
         self.username = username
-        self._hashed_password = hashed_password()
+        self._hashed_password = hash_password(password, salt)
 
     @property
     def id(self):
@@ -36,6 +37,8 @@ class Users:
                 self._id = cursor.fetchone()[0]
                 conn.close()
                 return True
+            except psycopg2.errors.UniqueViolation:
+                print(f'User {self.username} already exists')
             except Exception as e:
                 conn.close()
                 print('saving wasn\'t done')
