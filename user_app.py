@@ -13,7 +13,8 @@ def login():
     except Exception:
         print('Wrong username or password')
 
-
+#-Lr(O7M)ePo0!S4ac08c14916cc7d5af7dd48fb0c040e2b4771530317d6ef79557de037c60cd83
+#YlOuANkay>nX}\Q177030fee1d85f15217290f8236d1154c6979936c5c908c823995f7289ebfa3c
 while True:
     try:
         option = int(input(
@@ -31,7 +32,7 @@ while True:
         user = login()
         if user:
             new_pass = input('New password: ')
-            user.password = new_pass
+            user.set_password(new_pass)
             user.save_to_db()
 
     elif option == 3:

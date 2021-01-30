@@ -1,14 +1,16 @@
 from models import Users, Messages
+import hashing_password
 
 def login():
     username = input('Username: ')
     password = input('Password: ')
     user = Users.load_user_by_username(username)
     try:
-        if user and password == user.password:
+        if user and hashing_password.check_password(password, user.hashed_password):
             return user
         else:
             raise Exception
+
     except Exception:
         print('Wrong username or password')
 
@@ -27,12 +29,11 @@ while True:
             for item in a:
                 user_from = Users.load_user_by_id(item.from_id)
                 print(f'\nMessage from {user_from.username}:\n{item.msg}\nSent {item.creation_date}\n')
-
+            if len(a) == 0:
+                print('No messages for you')
     elif option == 2:
-        username = input('Username: ')
-        password = input('Password: ')
-        user = Users.load_user_by_username(username)
-        if password == user.password:
+        user = login()
+        if user:
             receiver = input('To whom you want to send your message')
             receiver = Users.load_user_by_username(receiver)
             msg = input('Write your message: ')

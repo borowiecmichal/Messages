@@ -5,7 +5,7 @@ class Users:
     def __init__(self, username='', password='', salt=''):
         self._id = None
         self.username = username
-        self._hashed_password = hash_password(password,salt)
+        self._hashed_password = hashed_password()
 
     @property
     def id(self):
@@ -197,7 +197,7 @@ class Messages:
     @staticmethod
     def load_all_messages(**kwargs):
         sql = '''
-        SELECT * FROM messages;
+        SELECT * FROM messages
         '''
         sql_temp = []
         for key, value in kwargs.items():
@@ -223,15 +223,13 @@ class Messages:
             conn.close()
             return msg_list
 
-        except:
+        except Exception as e:
             conn.close()
             print('loading failed')
 
     def __str__(self):
         return f'from {self.from_id} to {self.to_id}: {self.msg}, {self.creation_date}'
 
-
 if __name__ == '__main__':
-    a = Users('ziomal', 'xsss')
-    a.save_to_db()
+
 
