@@ -231,5 +231,5 @@ class Messages:
         return f'from {self.from_id} to {self.to_id}: {self.msg}, {self.creation_date}'
 
 if __name__ == '__main__':
-
+    pass
 
