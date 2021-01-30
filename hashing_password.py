@@ -17,7 +17,7 @@ def hash_password(password, salt=None):
     """
 
     # generate salt if not provided
-    if salt == '':
+    if salt == '' or salt is None:
         salt = generate_salt()
 
     # fill to 16 chars if too short
